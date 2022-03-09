@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, compose, applyMiddleware } from 'redux'
 import reducer, { history } from './reducers'
 import createSagaMiddleware from '@redux-saga/core'
 import rootSaga from './sagas'
@@ -8,11 +8,10 @@ const sagaMiddleware = createSagaMiddleware()
 
 const store = createStore(
   reducer,
-  window.window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
-    applyMiddleware(
-      routerMiddleware(history),
-      sagaMiddleware
-    )
+  compose(
+    applyMiddleware(sagaMiddleware),
+    applyMiddleware(routerMiddleware(history)),
+    window.__REDUX_DEVTOOLS_EXTENSION__  ?  window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
   )
 )
 
